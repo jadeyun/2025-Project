@@ -32,15 +32,16 @@ englishoverlay::englishoverlay(QWidget *parent)
 
             QString path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/unfinished_plans.txt";
 
-            QFile file(path);
-            if (file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
-                file.close(); // 直接关闭即可，内容已被清空
-                QMessageBox::information(this, "Success", "All saved plans have been cleared.");
-            } else {
-                QMessageBox::warning(this, "Error", "Failed to clear saved plans.");
-            }
+            // if要暂时清空文件
+            // QFile file(path);
+            // if (file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+            //     file.close(); // 直接关闭即可，内容已被清空
+            //     QMessageBox::information(this, "Success", "All saved plans have been cleared.");
+            // } else {
+            //     QMessageBox::warning(this, "Error", "Failed to clear saved plans.");
+            // }
 
-            // ✅ Step 1: 收集任务及状态
+            // 收集任务及状态
             QList<QString> taskLines;
             bool allChecked = true;
 
@@ -55,9 +56,9 @@ englishoverlay::englishoverlay(QWidget *parent)
                 }
             }
 
-            // ✅ Step 2: 读取原有文件内容
+            // 读取原有文件内容
             QStringList lines;
-            // QFile file(path);
+            QFile file(path);
             if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
                 QTextStream in(&file);
                 while (!in.atEnd()) {
@@ -66,7 +67,7 @@ englishoverlay::englishoverlay(QWidget *parent)
                 file.close();
             }
 
-            // ✅ Step 3: 移除已存在的同名计划
+            // 移除已存在的同名计划
             QStringList updatedLines;
             bool insidePlan = false;
             for (const QString &line : lines) {
@@ -84,7 +85,7 @@ englishoverlay::englishoverlay(QWidget *parent)
                 updatedLines << line;
             }
 
-            // ✅ Step 4: 添加新版本的计划
+            // 添加新版本的计划
             if (!allChecked) {
                 updatedLines << "[[" + planName + "]]";
                 updatedLines << taskLines;
@@ -93,7 +94,7 @@ englishoverlay::englishoverlay(QWidget *parent)
                 qDebug() << "All finished";
             }
 
-            // ✅ Step 5: 写回文件
+            // 写回文件
             if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
                 QTextStream out(&file);
                 for (const QString &line : updatedLines)

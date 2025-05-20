@@ -20,18 +20,18 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // 暂时清空
-    QFile file(TaskRecord->logFilePath);
-    if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        QTextStream out(&file);
-        out << "name|date|year|month|day|time|hour|minute|second|times\n";
-        file.close();
-        qDebug() << "日志文件已在启动时清空";
-    }
+    // // 暂时清空
+    // QFile file(TaskRecord->logFilePath);
+    // if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+    //     QTextStream out(&file);
+    //     out << "name|date|year|month|day|time|hour|minute|second|times\n";
+    //     file.close();
+    //     qDebug() << "日志文件已在启动时清空";
+    // }
 
 
     // Button
-    // Switch Page Button
+    // Switch Page Button, bottom bar
     connect(ui->pushButton_1, &QPushButton::clicked, this, [=]() { //
         ui->stackedWidget->setCurrentIndex(0);  // Go to Page 1
     });
@@ -40,11 +40,11 @@ MainWindow::MainWindow(QWidget *parent)
         ui->stackedWidget->setCurrentIndex(1);  // Go to Page 2
     });
 
-    connect(ui->pushButton_4, &QPushButton::clicked, this, [=]() {
+    connect(ui->pushButton_3, &QPushButton::clicked, this, [=]() {
         ui->stackedWidget->setCurrentIndex(2);  // Go to Page 3
     });
 
-    connect(ui->pushButton_3, &QPushButton::clicked, this, [=]() {
+    connect(ui->pushButton_4, &QPushButton::clicked, this, [=]() {
         ui->stackedWidget->setCurrentIndex(3);  // Go to Page 4
     });
 
@@ -192,7 +192,7 @@ MainWindow::MainWindow(QWidget *parent)
     chartView->setStyleSheet("background: transparent;");
     chartView->setRenderHint(QPainter::Antialiasing);
     chartView->setParent(ui->donut_chart); // or your main widget
-    chartView->setGeometry(20, 0, 250, 250); // x, y, width, height
+    chartView->setGeometry(0, 0, 250, 250); // x, y, width, height
 
 
 }

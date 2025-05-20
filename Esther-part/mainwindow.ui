@@ -166,7 +166,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QToolButton" name="toolButton">
@@ -405,13 +405,22 @@ li.checked::marker { content: &quot;\2612&quot;; }
     </widget>
     <widget class="QWidget" name="page_3">
      <widget class="QWidget" name="donut_chart" native="true">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>50</x>
         <y>10</y>
-        <width>120</width>
-        <height>80</height>
+        <width>300</width>
+        <height>300</height>
        </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>100</height>
+       </size>
       </property>
      </widget>
     </widget>

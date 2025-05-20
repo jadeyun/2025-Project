@@ -16,6 +16,12 @@ public:
 
     QCheckBox *checkbox;
     QLabel *label;
+
+    bool isChecked() const;
+    QString getText() const;
+
+    void setChecked(bool checked);
+
 };
 
 #endif // TASKITEMWIDGET_H

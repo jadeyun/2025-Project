@@ -11,7 +11,8 @@
 #include <QAction>         // 新增：菜单项
 #include <QToolButton>     // 新增：工具按钮
 #include "englishoverlay.h"
-#include "programmingoverlay.h"
+// #include "programmingoverlay.h"
+#include "taskrecord.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -35,10 +36,14 @@ protected:
     void showEvent(QShowEvent* event) override;
     void resizeEvent(QResizeEvent* event) override;
     void showOverlay(QWidget* overlay);
+    void loadUnfinishedPlans();
+    void loadSelectedPlan(const QString &planName);
 
 private:
     englishoverlay *englishOverlay;
-    programmingoverlay *programmingOverlay;
+    // programmingoverlay *programmingOverlay;
     QWidget* overlayWidget;
+    taskRecord* TaskRecord;
+
 };
 #endif // MAINWINDOW_H

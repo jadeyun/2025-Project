@@ -4,6 +4,12 @@
         <file>icons/icons8-history-100.png</file>
         <file>icons/icons8-reload-100.png</file>
         <file>icons/icons8-choose-96.png</file>
+        <file>icons/arrow_left.png</file>
+        <file>icons/schedule.png</file>
+        <file>icons/account_circle-3.png</file>
+        <file>icons/Home.png</file>
+        <file>icons/Pie chart.png</file>
+        <file>icons/main-pic.png</file>
     </qresource>
     <qresource prefix="/new/prefix1"/>
 </RCC>

@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QGridLayout>
 #include <QDialog>
 #include <QComboBox>
 
@@ -20,8 +21,9 @@ class Profile : public QWidget
     Q_OBJECT
 
 public:
-    explicit Profile(QWidget *parent = nullptr);
+    explicit Profile(QWidget *parent = nullptr, bool doTaskToday = false);
     ~Profile();
+    void markTodayDone();
 
 private slots:
     void on_returnButton_clicked();
@@ -33,13 +35,15 @@ private:
     void loadData(const QString& filename);
     void saveData(const QString& filename);
     void displayLeftPanel();
-    void displayRightPanel();
+    void displayRightPanel(bool doTaskToday);
     void populateCalendar();
+    void clearCalendar();
     void updateProfilePic(const QString& filename);
-    void updateFlagLabel();
     void setLabelText();
     void applyStyle();
+    void updateFireLabel();
     QString savedUserInfoFile = "saved_user_info.txt";
+    QGridLayout* calendarLayout;
 };
 
 class EditDialog : public QDialog

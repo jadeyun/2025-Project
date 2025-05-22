@@ -13,11 +13,11 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>0</y>
+     <y>1</y>
      <width>811</width>
      <height>511</height>
     </rect>
@@ -39,23 +39,12 @@
         </property>
        </widget>
       </item>
-      <item>
-       <layout class="QHBoxLayout" name="innerLayout">
-        <item>
-         <widget class="QLabel" name="nicknameLabel">
-          <property name="text">
-           <string>TextLabel</string>
-          </property>
-         </widget>
-        </item>
-        <item alignment="Qt::AlignmentFlag::AlignHCenter">
-         <widget class="QLabel" name="flagLabel">
-          <property name="text">
-           <string>TextLabel</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+      <item alignment="Qt::AlignmentFlag::AlignLeft">
+       <widget class="QLabel" name="nicknameLabel">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="emailAddressLabel">
@@ -92,40 +81,36 @@
      </layout>
     </item>
     <item>
+     <widget class="Line" name="middleLine">
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
      <layout class="QVBoxLayout" name="rightLayout">
       <item>
        <widget class="QLabel" name="streakTitleLabel">
         <property name="text">
-         <string>TextLabel</string>
+         <string> 欢迎回来！</string>
         </property>
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="streakFireLayout">
-        <item>
-         <widget class="QLabel" name="streakCountLabel">
-          <property name="text">
-           <string>TextLabel</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="fireLabel">
-          <property name="text">
-           <string>TextLabel</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QLabel" name="bestStreakLabel">
+       <widget class="QLabel" name="fireLabel">
         <property name="text">
-         <string>TextLabel</string>
+         <string>Fire Icon</string>
         </property>
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="calendarTitle">
+        <property name="text">
+         <string>CalendarTitle</string>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignmentFlag::AlignHCenter">
        <widget class="QWidget" name="calendarWidget" native="true"/>
       </item>
      </layout>

@@ -23,14 +23,14 @@ struct UserInfo {
 UserInfo user;
 
 struct StreakDetails {
-    int streakCount = 0, bestStreak = 0;
+    int streakCount = 0;
     QString month;
-    QString weeklyStreak; // Save as 1 or 0 for SMTWTFS. Eg.: 0101000.
     QString calendarStreak; // Similar as above.
+    QString lastMarkedDate;
 };
 StreakDetails userStreak;
 
-Profile::Profile(QWidget *parent)
+Profile::Profile(QWidget *parent, bool doTaskToday)
     : QWidget(parent)
     , ui(new Ui::Profile)
 {
@@ -41,8 +41,13 @@ Profile::Profile(QWidget *parent)
         loadData(savedUserInfoFile);
     }
     connect(ui->editProfileButton, &QPushButton::clicked, this, &Profile::openEditDialog);
+    ui->bigLayout->setStretch(0, 1);
+    ui->bigLayout->setStretch(1, 1);
+    ui->bigLayout->setStretch(2, 1);
+    ui->middleLine->setFixedWidth(1);
+    ui->middleLine->setStyleSheet("background-color: #633a00;");
     displayLeftPanel();
-    displayRightPanel();
+    displayRightPanel(doTaskToday);
     applyStyle();
 }
 
@@ -68,25 +73,19 @@ void Profile::loadData(const QString& filename)
         else if (line.startsWith("StreakCount:")) {
             userStreak.streakCount = line.section(":", 1).toInt();
         }
-        else if (line.startsWith("BestStreak:")) {
-            userStreak.bestStreak = line.section(":", 1).toInt();
-        }
         else if (line.startsWith("Month:")) {
             userStreak.month = line.section(":", 1).trimmed();
         }
-        else if (line.startsWith("Week:")) {
-            userStreak.weeklyStreak = line.section(":", 1).trimmed();
-        }
         else if (line.startsWith("Calendar:")) {
             userStreak.calendarStreak = line.section(":", 1).trimmed();
+        }
+        else if (line.startsWith("LastMarkedDate:")) {
+            userStreak.lastMarkedDate = line.section(":", 1).trimmed();
         }
     }
     file.close();
 
     // Reset.
-    if (QDate::currentDate().dayOfWeek() == 7 || userStreak.weeklyStreak.isEmpty()) {
-        userStreak.weeklyStreak = QString(7, '0'); // Reset if today is Sunday.
-    }
     QString currentMonth = QDate::currentDate().toString("yyyy-MM");
     if (userStreak.month != currentMonth) {
         userStreak.month = currentMonth;
@@ -103,16 +102,13 @@ void Profile::saveData(const QString& filename)
     QTextStream out(&file);
     out << "UserInfo:" << user.nickname << "|" << user.name << "|" << user.country << "|" << user.emailAddress << "|" << user.personalBio << "|" << user.profilePicPath << "\n";
     out << "StreakCount:" << userStreak.streakCount << "\n";
-    out << "BestStreak:" << userStreak.bestStreak << "\n";
     out << "Month:" << userStreak.month << "\n";
-    out << "Week:" << userStreak.weeklyStreak << "\n";
     out << "Calendar:" << userStreak.calendarStreak << "\n";
+    out << "LastMarkedDate:" << userStreak.lastMarkedDate << "\n";
     file.close();
 }
 void Profile::displayLeftPanel()
 {
-    ui->bigLayout->setStretch(0, 1);
-    ui->bigLayout->setStretch(1, 1);
     setLabelText();
     ui->leftLayout->setSpacing(2);
     this->setStyleSheet("background-color: #fff7ef");
@@ -120,37 +116,30 @@ void Profile::displayLeftPanel()
     ui->nicknameLabel->setFixedSize(120, 40);
     ui->emailAddressLabel->setFixedSize(255, 20);
     ui->personalBioLabel->setFixedSize(255, 120);
-    updateFlagLabel();
 }
-void Profile::displayRightPanel()
+void Profile::displayRightPanel(bool doTaskToday)
 {
-    ui->bestStreakLabel->setText(userStreak.bestStreak + "天");
-    ui->bestStreakLabel->setStyleSheet("font-size: 16px; font-weight: bold; font-family: \"Noto Sans SC\", \"Helvetica\"; color: #633a00;");
-    QGraphicsDropShadowEffect* glowEffect = new QGraphicsDropShadowEffect();
-    glowEffect->setBlurRadius(20);
-    glowEffect->setOffset(0);
-    glowEffect->setColor(QColor(255, 165, 0));
-    ui->bestStreakLabel->setGraphicsEffect(glowEffect);
-    QPropertyAnimation* animation = new QPropertyAnimation(glowEffect, "blurRadius");
-    animation->setStartValue(10);
-    animation->setEndValue(25);
-    animation->setDuration(1000);
-    animation->setLoopCount(-1);
-    animation->setEasingCurve(QEasingCurve::InOutSine);
-    animation->start();
+    if (doTaskToday) {
+        markTodayDone();
+        qDebug() << "Edit";
+    }
     populateCalendar();
-
+    updateFireLabel();
 }
 void Profile::populateCalendar()
 {
-    QGridLayout* calendarLayout = new QGridLayout(ui->calendarWidget);
-    calendarLayout->setSpacing(2);
+    calendarLayout = new QGridLayout(ui->calendarWidget);
+    ui->calendarTitle->setText(QDate::currentDate().toString("MMMM yyyy").toUpper());
+    ui->calendarTitle->setAlignment(Qt::AlignCenter);
+    ui->calendarTitle->setStyleSheet("font-weight: bold; font-size: 16px;");
+    calendarLayout->setSpacing(0);
+    calendarLayout->setVerticalSpacing(10);
     QStringList daysInWeek = {"S", "M", "T", "W", "T", "F", "S"};
     for (int i = 0; i < 7; i++) {
         QLabel* dayLabel = new QLabel(daysInWeek[i]);
         dayLabel->setAlignment(Qt::AlignCenter);
-        dayLabel->setStyleSheet("font-weight: bold;");
-        calendarLayout->addWidget(dayLabel, 0, i);
+        dayLabel->setStyleSheet("font-size: 14px; font-weight: bold; color: #633a00; background-color: #ffe7cc; padding: 5px; border-radius: 4px;");
+        calendarLayout->addWidget(dayLabel, 1, i);
     }
     QDate today = QDate::currentDate();
     QDate first = QDate(today.year(), today.month(), 1);
@@ -162,16 +151,16 @@ void Profile::populateCalendar()
             streakDates.push_back(i + 1);
         }
     }
-    int row = 1, col = startCol;
+    int row = 2, col = startCol;
     for (int i = 1; i <= totalDays; i++) {
         QLabel* dataLabel = new QLabel(QString::number(i));
         dataLabel->setAlignment(Qt::AlignCenter);
         dataLabel->setFixedSize(32, 32);
         if (streakDates.contains(i)) {
-            dataLabel->setStyleSheet("background-color: orange; color: #633a00; border-radius: 6px;");
+            dataLabel->setStyleSheet("background-color: orange; color: #633a00; border: 1px solid white; border-radius: 10px;");
         }
         else {
-            dataLabel->setStyleSheet("background-color: white; color: #633a00; border-radius: 6px;");
+            dataLabel->setStyleSheet("background-color: white; color: #633a00; border: 1px solid white; border-radius: 10px;");
         }
         calendarLayout->addWidget(dataLabel, row, col);
         col++;
@@ -181,25 +170,16 @@ void Profile::populateCalendar()
 void Profile::updateProfilePic(const QString& filename)
 {
     QPixmap pic(filename);
-    pic = pic.scaled(200, 200, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
-    QBitmap mask(200, 200); // Make round.
+    pic = pic.scaled(190, 190, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+    QBitmap mask(190, 190); // Make round.
     mask.fill(Qt::color0);
     QPainter painter(&mask);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setBrush(Qt::color1);
-    painter.drawEllipse(0, 0, 200, 200);
+    painter.drawEllipse(0, 0, 190, 190);
     pic.setMask(mask);
     ui->profilePic->setPixmap(pic);
-    ui->profilePic->setFixedSize(200, 200);
-    ui->profilePic->setStyleSheet("border: 2px solid #633a00; border-radius: 100px; padding: 0px;");
-}
-void Profile::updateFlagLabel()
-{
-    QString flagFile = QString("resources/cropped/%1.png").arg(user.country.toLower());
-    QPixmap flagPixmap(flagFile);
-    ui->flagLabel->setPixmap(flagPixmap.scaled(75, 50, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    ui->flagLabel->setFixedSize(75, 50);
-    ui->flagLabel->setStyleSheet("border-radius: 6px; margin-left: 20px;"); // Flag is not done yet.
+    ui->profilePic->setFixedSize(190, 190);
 }
 void Profile::openEditDialog()
 {
@@ -237,7 +217,6 @@ void Profile::setLabelText()
     ui->emailAddressLabel->setStyleSheet("font-size: 14px; color: gray;");
     ui->personalBioLabel->setText(user.personalBio);
     ui->personalBioLabel->setWordWrap(true);
-    ui->innerLayout->setSpacing(5);
     ui->leftLayout->setContentsMargins(0, 0, 0, 0);
 }
 
@@ -255,6 +234,14 @@ void Profile::applyStyle()
     ui->editButtonLayout->setSpacing(20);
     ui->editProfileButton->setStyleSheet(style);
     ui->editPicButton->setStyleSheet(style);
+    style = R"(background-color: white; font-size: 12px; font-family: "Noto Sans SC", "Helvetica"; border: 1px solid white; border-radius: 12px; )";
+    QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect();
+    shadow->setBlurRadius(15);
+    shadow->setOffset(3, 3);
+    shadow->setColor(QColor(99, 58, 0, 100));
+    ui->calendarWidget->setGraphicsEffect(shadow);
+    ui->calendarWidget->setFixedWidth(300);
+    ui->calendarWidget->setStyleSheet(style);
 }
 
 
@@ -329,4 +316,27 @@ void EditDialog::applyDialogStyle() // UI: Esther. Below are extracted from timt
     shadow->setOffset(0, 4);
     shadow->setColor(QColor(0, 0, 0, 80));
     this->setGraphicsEffect(shadow);
+}
+
+void Profile::markTodayDone()
+{
+    QDate today = QDate::currentDate();
+    int dayIndex = today.day() - 1;
+    if (userStreak.calendarStreak[dayIndex] == '1') {
+        return; // Done.
+    }
+    QDate lastDate = QDate::fromString(userStreak.lastMarkedDate, "yyyy-MM-dd");
+    if (lastDate.daysTo(today) == 1) {
+        userStreak.streakCount++;
+    }
+    else {
+        userStreak.streakCount = 1;
+    }
+    userStreak.calendarStreak[dayIndex] = '1';
+    userStreak.lastMarkedDate = today.toString("yyyy-MM-dd");
+    saveData(savedUserInfoFile);
+}
+void Profile::updateFireLabel()
+{
+    ui->fireLabel->setText(QString::number(userStreak.streakCount));
 }

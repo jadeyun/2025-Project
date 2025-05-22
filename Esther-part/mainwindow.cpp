@@ -10,7 +10,7 @@
 #include <QPoint>
 #include <QLayout>
 
-
+bool doTaskToday = true;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->pushButton_4, &QPushButton::clicked, this, [=]() {
         ui->stackedWidget->setCurrentIndex(2);  // Go to Page 4
-        Profile* profile = new Profile(this);
+        Profile* profile = new Profile(this, doTaskToday);
         profile->show();
     });
 

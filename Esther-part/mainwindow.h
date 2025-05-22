@@ -1,5 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+#include "../wenyi-part/timetable.h" // Wenyi: add.
+#include "graph.h" // Wenyi: add.
+#include "profile.h" // Wenyi: add.
 
 #include <QMainWindow>
 #include <QStackedWidget>  // 新增：用于页面切换

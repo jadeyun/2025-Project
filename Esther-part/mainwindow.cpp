@@ -10,6 +10,8 @@
 #include <QPoint>
 #include <QLayout>
 
+
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -21,18 +23,25 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->pushButton_1, &QPushButton::clicked, this, [=]() {
         ui->stackedWidget->setCurrentIndex(0);  // Go to Page 1
+        // Wenyi: just to test graph.
+        Graph* graph = new Graph(this);
+        graph->show();
     });
 
-    connect(ui->pushButton_2, &QPushButton::clicked, this, [=]() {
-        ui->stackedWidget->setCurrentIndex(1);  // Go to Page 2
+    connect(ui->pushButton_2, &QPushButton::clicked, this, [=]() { // Timetable.
+        //ui->stackedWidget->setCurrentIndex(2);  // Go to Page 2 // Wenyi: remove.
+        Timetable* timetable = new Timetable(this); // Wenyi: add.
+        timetable->show();
     });
 
     connect(ui->pushButton_4, &QPushButton::clicked, this, [=]() {
-        ui->stackedWidget->setCurrentIndex(2);  // Go to Page 3
+        ui->stackedWidget->setCurrentIndex(2);  // Go to Page 4
+        Profile* profile = new Profile(this);
+        profile->show();
     });
 
     connect(ui->pushButton_3, &QPushButton::clicked, this, [=]() {
-        ui->stackedWidget->setCurrentIndex(3);  // Go to Page 4
+        ui->stackedWidget->setCurrentIndex(3);  // Go to Page 3
     });
 
     // Connect "Exit" button
@@ -117,8 +126,6 @@ MainWindow::MainWindow(QWidget *parent)
         overlayWidget->show();
 
     });
-
-
 }
 
 
@@ -154,10 +161,3 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-
-
-
-
-
-

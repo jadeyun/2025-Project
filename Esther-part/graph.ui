@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Graph</class>
+ <widget class="QWidget" name="Graph">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>810</width>
+    <height>510</height>
+   </rect>
+  </property>
+  <property name="cursor">
+   <cursorShape>PointingHandCursor</cursorShape>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>811</width>
+     <height>511</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="bigLayout">
+    <item row="0" column="3" alignment="Qt::AlignmentFlag::AlignRight">
+     <widget class="QComboBox" name="comboRange">
+      <property name="cursor">
+       <cursorShape>OpenHandCursor</cursorShape>
+      </property>
+      <item>
+       <property name="text">
+        <string>今天</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>这个月</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>今年</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="0" column="0" alignment="Qt::AlignmentFlag::AlignLeft">
+     <widget class="QPushButton" name="returnButton">
+      <property name="text">
+       <string>返回</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="2" column="0" colspan="4">
+     <layout class="QVBoxLayout" name="graphLayout"/>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

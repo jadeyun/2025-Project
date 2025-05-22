@@ -9,14 +9,19 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Charts)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts)
 
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+	../wenyi-part/timetable.cpp
+	../wenyi-part/timetable.h
+	../wenyi-part/timetable.ui
+	../wenyi-part/resource.qrc
+	../wenyi-part/book.png
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -28,6 +33,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         taskitemWidget.h
         taskitemWidget.cpp
         resources.qrc
+        profile.h profile.cpp profile.ui
+        graph.h graph.cpp graph.ui
 
     )
 # Define target properties for Android with Qt 6 as:
@@ -48,7 +55,7 @@ else()
     endif()
 endif()
 
-target_link_libraries(Esther-part PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(Esther-part PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

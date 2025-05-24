@@ -13,43 +13,47 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Charts)
 
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+    main.cpp
+    mainwindow.cpp
+    mainwindow.h
+    mainwindow.ui
+    englishoverlay.cpp
+    englishoverlay.h
+    englishoverlay.ui
+    taskitemWidget.cpp
+    taskitemWidget.h
+    resources.qrc
+    taskrecord.cpp
+    taskrecord.h
+    achievementboard.cpp
+    achievementboard.h
+    achievementboard.ui
+    graph.cpp
+    graph.h
+    graph.ui
+    clickablelabel.cpp
+    clickablelabel.h
 )
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Esther-part
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        englishoverlay.h englishoverlay.cpp englishoverlay.ui
-
-        taskitemWidget.h
-        taskitemWidget.cpp
-        resources.qrc
-        taskrecord.h taskrecord.cpp
-
-
-
+        timetable.h timetable.cpp timetable.ui
+        profile.h profile.cpp profile.ui
+        welcomepage.h welcomepage.cpp welcomepage.ui
     )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET Esther-part APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else()
     if(ANDROID)
-        add_library(Esther-part SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
+        add_library(Esther-part SHARED ${PROJECT_SOURCES})
     else()
-        add_executable(Esther-part
-            ${PROJECT_SOURCES}
-        )
+        add_executable(Esther-part ${PROJECT_SOURCES})
     endif()
 endif()
+
 
 target_link_libraries(Esther-part PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Charts)
 

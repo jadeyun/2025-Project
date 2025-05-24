@@ -20,7 +20,7 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: #E28A52;
+   <string notr="true">background-color: beige;
 </string>
   </property>
   <widget class="QTextEdit" name="textEdit">
@@ -57,11 +57,14 @@ li.checked::marker { content: &quot;\2612&quot;; }
    </property>
    <property name="font">
     <font>
-     <family>Georgia</family>
+     <family>Arial Black</family>
+     <pointsize>14</pointsize>
+     <bold>true</bold>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: beige;</string>
+    <string notr="true">background-color: beige;
+</string>
    </property>
   </widget>
   <widget class="QLabel" name="plan_name">
@@ -84,11 +87,13 @@ li.checked::marker { content: &quot;\2612&quot;; }
    </property>
    <property name="font">
     <font>
-     <family>Georgia</family>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">color: #0B1A36;</string>
+    <string notr="true">color: #0B1A36;
+background-color: transparent;</string>
    </property>
    <property name="text">
     <string/>
@@ -97,7 +102,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <widget class="QPushButton" name="backButton">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>10</y>
      <width>71</width>
      <height>25</height>
@@ -111,15 +116,18 @@ li.checked::marker { content: &quot;\2612&quot;; }
    </property>
    <property name="font">
     <font>
-     <family>Georgia</family>
+     <family>Arial</family>
+     <pointsize>12</pointsize>
+     <bold>false</bold>
     </font>
    </property>
    <property name="styleSheet">
     <string notr="true">color: #0B1A36;
-background-color: transparent;</string>
+background-color: transparent;
+border-radius: 15px;</string>
    </property>
    <property name="text">
-    <string>Back</string>
+    <string>返回主页</string>
    </property>
    <property name="icon">
     <iconset resource="resources.qrc">
@@ -135,18 +143,32 @@ background-color: transparent;</string>
   <widget class="QGraphicsView" name="graphicsView">
    <property name="geometry">
     <rect>
-     <x>-5</x>
-     <y>-40</y>
+     <x>0</x>
+     <y>40</y>
      <width>831</width>
      <height>81</height>
     </rect>
    </property>
   </widget>
+  <widget class="QGraphicsView" name="graphicsView_2">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>807</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: #E28A52;</string>
+   </property>
+  </widget>
   <zorder>graphicsView</zorder>
   <zorder>textEdit</zorder>
   <zorder>listWidget</zorder>
-  <zorder>plan_name</zorder>
+  <zorder>graphicsView_2</zorder>
   <zorder>backButton</zorder>
+  <zorder>plan_name</zorder>
  </widget>
  <resources>
   <include location="resources.qrc"/>

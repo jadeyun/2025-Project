@@ -1,5 +1,10 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "clickablelabel.h"
+#include "timetable.h"
+#include "profile.h"
+#include "welcomepage.h"
+
 #include <QMessageBox>
 #include <QMenu>
 #include <QAction>
@@ -12,13 +17,19 @@
 #include <QInputDialog>
 #include <QStandardPaths>
 #include <QtCharts>
+#include <QRandomGenerator>
+#include <QPieSeries>
+#include <QChartView>
 
+bool doTask = true;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), TaskRecord(new taskRecord(this))
     , ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
+
 
     // // 暂时清空
     // QFile file(TaskRecord->logFilePath);
@@ -29,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
     //     qDebug() << "日志文件已在启动时清空";
     // }
 
+    generateQuote();
 
     // Button
     // Switch Page Button, bottom bar
@@ -38,14 +50,30 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->pushButton_2, &QPushButton::clicked, this, [=]() {
         ui->stackedWidget->setCurrentIndex(1);  // Go to Page 2
+        this->hide();
+        Timetable *timetable = new Timetable(this);
+        timetable->show();
+
     });
 
     connect(ui->pushButton_3, &QPushButton::clicked, this, [=]() {
         ui->stackedWidget->setCurrentIndex(2);  // Go to Page 3
+        generateQuote();
+        loadTodayTasksToChart();
     });
 
     connect(ui->pushButton_4, &QPushButton::clicked, this, [=]() {
         ui->stackedWidget->setCurrentIndex(3);  // Go to Page 4
+        this->hide();
+        bool doTaskToday = true;
+
+        Profile *profile = new Profile(this);
+        profile->doTaskToday=doTask;
+        profile->displayRightPanel();
+
+        profile->applyStyle();
+        profile->show();
+
     });
 
     // Connect "Exit" button
@@ -60,8 +88,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->plan_img->setPixmap(QPixmap(":/icons/icons/icons8-write-96.png")); //制定计划
     ui->plan_img->setScaledContents(true);
 
-    ui->notdone_img->setPixmap(QPixmap(":/icons/icons/icons8-reload-100.png")); //未完成
-    ui->notdone_img->setScaledContents(true);
+    // ui->notdone_img->setPixmap(QPixmap(":/icons/icons/icons8-reload-100.png")); //未完成
+    // ui->notdone_img->setScaledContents(true);
 
     ui->record_img->setPixmap(QPixmap(":/icons/icons/icons8-history-100.png")); //历史记录
     ui->record_img->setScaledContents(true);
@@ -73,6 +101,54 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // 首页
+    ui->toolButton->setStyleSheet(R"(
+        QToolButton{
+            background-color: #E28A52;
+            color: beige;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        QToolButton:hover {
+            background-color: #EDA270;
+        }
+)");
+//     ui->toolButton_2->setStyleSheet(R"(
+//         QToolButton{
+//             background-color: #E28A52;
+//             color: beige;
+//             border-radius: 10px;
+//             font-size: 12px;
+//         }
+
+//         QToolButton:hover {
+//             background-color: #EDA270;
+//         }
+// )");
+    ui->toolButton_3->setStyleSheet(R"(
+        QToolButton{
+            background-color: #E28A52;
+            color: beige;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        QToolButton:hover {
+            background-color: #EDA270;
+        }
+)");
+    ui->toolButton_4->setStyleSheet(R"(
+        QToolButton{
+            background-color: #E28A52;
+            color: beige;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        QToolButton:hover {
+            background-color: #EDA270;
+        }
+)");
 
     // 选择计划
     QMenu* menu = new QMenu(this);
@@ -83,7 +159,7 @@ MainWindow::MainWindow(QWidget *parent)
     QMenu::item {
         color: navy;
         padding: 5px 20px;
-        font-family: Georgia;
+        font-family: Arial;
     }
 )");
 
@@ -126,7 +202,7 @@ MainWindow::MainWindow(QWidget *parent)
 
         TaskRecord->logTask("学习剪辑");
 
-        QStringList tasks = {"观看剪辑教学影片", "edit", "edit"};
+        QStringList tasks = {"观看剪辑教学影片", "尝试剪辑长达1分钟的影片", "学习新的剪辑技巧"};
         englishOverlay->setName("学习剪辑");
         englishOverlay->setTasks(tasks);
         englishOverlay->setGeometry(ui->centralwidget->rect());
@@ -155,48 +231,53 @@ MainWindow::MainWindow(QWidget *parent)
 
     // 未完成
     // 记录在unfinished_plan //code 在 englishoverlay.cpp 的back button部分
-    connect(ui->toolButton_2, &QPushButton::clicked, this, &MainWindow::loadUnfinishedPlans);
+    // connect(ui->toolButton_2, &QPushButton::clicked, this, &MainWindow::loadUnfinishedPlans);
 
 
     // 历史记录
 
 
-    // 时间表
-
-
     // 数据统计
-    // Donut Chart
-    QPieSeries *series = new QPieSeries();
-    series->append("Task 1", 20);
-    series->append("Task 2", 10);
-    series->append("Task 3", 14);
-    series->append("Task 4", 20);
+    // successLabel - turning page
+    connect(ui->successLabel, &clickableLabel::clicked, this, [=]() {
+        achievementBoard = new achievementboard(this);  // Set MainWindow as parent
 
-    // Set colors manually
-    series->slices().at(0)->setBrush(QColor("#0B1A36")); // dark blue
-    series->slices().at(1)->setBrush(QColor("#E28A52")); // orange
-    series->slices().at(2)->setBrush(QColor("#FFFFFF")); // white
-    series->slices().at(3)->setBrush(QColor("#A3A9B2")); // grey
+        connect(achievementBoard, &achievementboard::backToMain, this, [this]() {
+            achievementBoard->hide();
+            this->centralWidget()->show();  // Show main page again
+        });
 
-    // Make it a donut
-    series->setHoleSize(0.4);
+        achievementBoard->show();
+        this->centralWidget()->hide();  // Hide main page
+    });
 
-    QChart *chart = new QChart();
-    chart->addSeries(series);
-    chart->setBackgroundVisible(false);        // Hide background
-    chart->setBackgroundBrush(Qt::NoBrush);    // No background fill
-    chart->setContentsMargins(0, 0, 0, 0);      // Remove chart margins
+    // graphLabel - turning page
+    connect(ui->graphLabel, &clickableLabel::clicked, this, [=]() {
+        Graph = new graph(this);  // Set MainWindow as parent
 
+        connect(Graph, &graph::backToMain, this, [this]() {
+            Graph->hide();
+            this->centralWidget()->show();  // Show main page again
+        });
 
-    QChartView *chartView = new QChartView(chart);
-    chartView->setStyleSheet("background: transparent;");
-    chartView->setRenderHint(QPainter::Antialiasing);
-    chartView->setParent(ui->donut_chart); // or your main widget
-    chartView->setGeometry(0, 0, 250, 250); // x, y, width, height
+        Graph->show();
+        this->centralWidget()->hide();  // Hide main page
+    });
+
+    // update hoursLabel
+
+    // update totalDaysLabel
 
 
 }
 
+
+
+// // go back to stacked page
+void MainWindow::goBackToStackedPage(int index) {
+    ui->stackedWidget->setCurrentIndex(index);
+    this->show();
+}
 
 
 // 调整overlay大小
@@ -214,12 +295,12 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
 
     // Define label size
-    int labelWidth = 400;
-    int labelHeight = 350;
+    int labelWidth = 300;
+    int labelHeight = 250;
 
     // Center the label inside central widget
     int x = (ui->centralwidget->width() - labelWidth) / 2 + 40;
-    int y = (ui->centralwidget->height() - labelHeight) / 2 - 50;
+    int y = (ui->centralwidget->height() - labelHeight) / 2;
 
     // Set geometry: position + size
     ui->label->setGeometry(x, y, labelWidth, labelHeight);
@@ -231,7 +312,6 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
 void MainWindow::showOverlay(QWidget *overlay) {
     englishOverlay->hide();
-    // programmingOverlay->hide();
 
     overlay->setGeometry(ui->centralwidget->rect());
     overlay->raise();
@@ -309,6 +389,161 @@ void MainWindow::loadUnfinishedPlans() {
         loadSelectedPlan(selected); // Load into englishoverlay
     }
 }
+
+
+// generate quote
+void MainWindow::generateQuote() {
+    QStringList testQuotes = {
+        "打卡成功！知识+1，拖延症-1","别问学了多少, 问就是稳稳进步了一点点", "你离‘卷王’又近了一步！","一不小心，又变优秀了一点", "脑细胞阵亡数个，但知识获得感爆棚", "今天不是“咸鱼”", "你刚刚悄悄超过了90%的咸鱼", "系统提示：你正在悄悄变厉害！", "不是我吹，我今天真的认真学了！", "别人只在朋友圈学习，我是真的动了脑子"
+    };
+
+    // Show ONE random quote
+    if (!testQuotes.isEmpty()) {
+        int index = QRandomGenerator::global()->bounded(testQuotes.size());
+        QString selectedQuote = testQuotes.at(index);
+        ui->quoteWord->setText(selectedQuote);
+        qDebug() << "Selected quote:" << selectedQuote;  // optional debug
+    } else {
+        ui->quoteWord->setText("No quotes available.");
+    }
+}
+
+
+
+// chart
+void MainWindow::loadTodayTasksToChart() {
+    // total
+    QMap<QString, int> taskMap;  // Key: task name, Value: total duration
+
+    QFile file(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/saved_data.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning("Failed to open saved_data.txt");
+        return;
+    }
+
+    QTextStream in(&file);
+
+    // QDate::currentDate().toString("yyyy-MM-dd");
+    QString today = "2025-05-20";  // Hardcoded for testing (replace with QDate::currentDate() later)
+    qDebug() << "Loading tasks for date:" << today;
+
+    // Read and accumulate task durations
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        QStringList parts = line.split("|");
+
+        // Skip malformed lines (expected format: task|date|duration)
+        if (parts.size() != 3) {
+            qDebug() << "Skipping malformed line:" << line;
+            continue;
+        }
+
+        QString task = parts[0].trimmed();
+        QString date = parts[1].trimmed();
+        bool match;
+        int duration = parts[2].trimmed().toInt(&match);
+
+        if (date == today && match) {
+            taskMap[task] += duration;  // Sum durations for duplicate tasks
+            qDebug() << "Processed task:" << task << "Duration:" << duration << "Total:" << taskMap[task];
+        }
+    }
+    file.close();
+
+    // Create the pie series from merged data
+    QPieSeries *series = new QPieSeries();
+    for (auto it = taskMap.begin(); it != taskMap.end(); ++it) {
+        series->append(it.key(), it.value());
+    }
+
+    // Abort if no data found
+    if (series->slices().isEmpty()) {
+        qWarning("No tasks found for the specified date.");
+        delete series;  // Cleanup
+        return;
+    }
+
+    // Apply styling (unchanged from your original code)
+    QStringList colors = {"#0B1A36", "#E28A52", "#A3A9B2"}; // "#FFFFFF", "#7D5BA6", "#56A3A6"
+    for (int i = 0; i < series->slices().size(); ++i) {
+        if (i < colors.size()) {
+            series->slices().at(i)->setBrush(QColor(colors[i]));
+        }
+
+        QFont labelFont = series->slices().at(i)->labelFont();
+        labelFont.setPointSize(11); // Default is small, increase for better visibility
+        series->slices().at(i)->setLabelFont(labelFont);
+        series->slices().at(i)->setLabelVisible(true); // ensure labels are shown
+    }
+
+    series->setPieSize(0.8);  // 0.8 of the view area — default is 1.0
+
+    series->setHoleSize(0.45);
+    for (auto slice : series->slices()) {
+        slice->setLabelVisible(true);
+        slice->setLabelPosition(QPieSlice::LabelOutside);
+    }
+
+    if (ui->donut_chart->layout()) {
+        QLayout* oldLayout = ui->donut_chart->layout();
+        delete oldLayout;  // This removes and deletes the layout
+    }
+    ui->donut_chart->setLayout(nullptr);  // Ensures no layout interferes
+
+
+    // Set up the chart
+    QChart *chart = new QChart();
+    chart->addSeries(series);
+    chart->setBackgroundVisible(false);
+    chart->legend()->setAlignment(Qt::AlignBottom);
+    chart->setMargins(QMargins(30, 40, 130, 90));  // more margin to avoid clipping // (30, 40, 130, 60)
+    chart->legend()->hide();
+
+    // chart->setFixedSize(500, 350);
+
+    // Set up the chart view
+    QChartView *chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+    chartView->setStyleSheet("background: transparent;");
+    chartView->setFixedSize(480, 320);
+
+
+    // Clear previous chart (if any)
+    QLayout *layout = ui->donut_chart->layout();
+    if (!layout) {
+        layout = new QVBoxLayout(ui->donut_chart);
+        ui->donut_chart->setLayout(layout);
+    } else {
+        QLayoutItem *item;
+        while ((item = layout->takeAt(0))) {
+            if (item->widget()) {
+                delete item->widget();  // Delete the old chart view
+            }
+            delete item;
+        }
+    }
+
+    // Add the new chart
+    layout->addWidget(chartView);
+    layout->setContentsMargins(0, 0, 0, 0);  // Bottom padding only
+    layout->setSpacing(0);
+    layout->setAlignment(chartView, Qt::AlignLeft | Qt::AlignHCenter);  // Then set alignment
+
+
+    qDebug() << "Chart updated with" << series->slices().size() << "tasks.";
+
+
+    chartView->setParent(ui->donut_chart);  // Ensure correct parent
+    chartView->setGeometry(300, 50, 480, 320);  // x, y, width, height
+    chartView->show();  // Make sure it's visible
+}
+
+
+
+
+
+
+
 
 
 

@@ -1,4 +1,3 @@
-// tasklogger.cpp
 #include "taskrecord.h"
 #include <QStandardPaths>
 
@@ -7,7 +6,7 @@ taskRecord::taskRecord(QObject *parent) : QObject(parent) {
     qDebug() << "Log file path set to:" << logFilePath;
 }
 
-//
+
 
 void taskRecord::logTask(const QString &planName)
 {
@@ -26,7 +25,7 @@ void taskRecord::logTask(const QString &planName)
     while (!in.atEnd()) {
         lines << in.readLine();
     }
-    file.resize(0); // 清空文件
+    // file.resize(0); // 清空文件
 
     // 准备新条目
     QDateTime now = QDateTime::currentDateTime();
@@ -35,7 +34,6 @@ void taskRecord::logTask(const QString &planName)
     QString newEntry = QString("%1|%2|%3|%4|%5|%6|%7|%8|%9|1").arg(planName, dateStr, now.toString("yyyy"), now.toString("MM"), now.toString("dd"),
                                                        timeStr, now.toString("hh"), now.toString("mm"), now.toString("ss"));
 
-    // 查找是否已有今日记录
     // 查找是否已有今日记录
     bool found = false;
     for (int i = 0; i < lines.size(); ++i) {
@@ -64,3 +62,9 @@ void taskRecord::logTask(const QString &planName)
     }
     file.close();
 }
+
+
+
+// void taskRecord::loadData() {
+
+// }

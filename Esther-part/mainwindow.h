@@ -11,8 +11,11 @@
 #include <QAction>         // 新增：菜单项
 #include <QToolButton>     // 新增：工具按钮
 #include "englishoverlay.h"
-// #include "programmingoverlay.h"
 #include "taskrecord.h"
+#include "achievementboard.h"
+#include "graph.h"
+// #include "welcomepage.h"
+
 
 
 QT_BEGIN_NAMESPACE
@@ -29,6 +32,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void goBackToStackedPage(int index);
+
+
 private:
     Ui::MainWindow *ui;
 
@@ -38,12 +44,15 @@ protected:
     void showOverlay(QWidget* overlay);
     void loadUnfinishedPlans();
     void loadSelectedPlan(const QString &planName);
+    void generateQuote();
+    void loadTodayTasksToChart();
 
 private:
     englishoverlay *englishOverlay;
-    // programmingoverlay *programmingOverlay;
     QWidget* overlayWidget;
     taskRecord* TaskRecord;
+    achievementboard *achievementBoard;
+    graph *Graph;
 
 };
 #endif // MAINWINDOW_H

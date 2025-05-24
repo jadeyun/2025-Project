@@ -10,6 +10,19 @@
         <file>icons/Home.png</file>
         <file>icons/Pie chart.png</file>
         <file>icons/main-pic.png</file>
+        <file>icons/Widget.png</file>
+        <file>icons/circle-2.png</file>
+        <file>icons/quoteSymbol.png</file>
+        <file>icons/TrophyCup.png</file>
+        <file>icons/book.png</file>
+        <file>icons/check.png</file>
+        <file>icons/edit.png</file>
     </qresource>
     <qresource prefix="/new/prefix1"/>
+    <qresource prefix="/">
+        <file>quote.txt</file>
+        <file>icons/star.gif</file>
+        <file>icons/star2.gif</file>
+        <file>icons/fire.gif</file>
+    </qresource>
 </RCC>

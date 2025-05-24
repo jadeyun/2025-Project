@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Profile</class>
+ <widget class="QWidget" name="Profile">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>807</width>
+    <height>505</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>1</y>
+     <width>811</width>
+     <height>511</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="bigLayout">
+    <item>
+     <layout class="QVBoxLayout" name="leftLayout">
+      <item alignment="Qt::AlignmentFlag::AlignLeft">
+       <widget class="QPushButton" name="returnButton">
+        <property name="styleSheet">
+         <string notr="true">color: #0B1A36;</string>
+        </property>
+        <property name="text">
+         <string>返回主页</string>
+        </property>
+        <property name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/icons/icons/arrow_left.png</normaloff>:/icons/icons/arrow_left.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignVCenter">
+       <widget class="QLabel" name="profilePic">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignmentFlag::AlignLeft">
+       <widget class="QLabel" name="nicknameLabel">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #0B1A36;</string>
+        </property>
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="emailAddressLabel">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="personalBioLabel">
+        <property name="styleSheet">
+         <string notr="true">color: #0B1A36;</string>
+        </property>
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="editButtonLayout">
+        <item alignment="Qt::AlignmentFlag::AlignRight">
+         <widget class="QPushButton" name="editPicButton">
+          <property name="styleSheet">
+           <string notr="true">color: #0B1A36;</string>
+          </property>
+          <property name="text">
+           <string>修改头像</string>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignmentFlag::AlignLeft">
+         <widget class="QPushButton" name="editProfileButton">
+          <property name="styleSheet">
+           <string notr="true">color: #0B1A36;</string>
+          </property>
+          <property name="text">
+           <string>修改信息</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="Line" name="middleLine">
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="rightLayout">
+      <item>
+       <widget class="QLabel" name="streakTitleLabel">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>36</pointsize>
+          <italic>true</italic>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #0B1A36;</string>
+        </property>
+        <property name="text">
+         <string> 欢迎回来！</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="fireLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>10</width>
+          <height>10</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #0B1A36;</string>
+        </property>
+        <property name="text">
+         <string>Fire Icon</string>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="calendarTitle">
+        <property name="text">
+         <string>CalendarTitle</string>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignmentFlag::AlignHCenter">
+       <widget class="QWidget" name="calendarWidget" native="true"/>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

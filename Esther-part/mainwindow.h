@@ -13,6 +13,8 @@
 #include "englishoverlay.h"
 // #include "programmingoverlay.h"
 #include "taskrecord.h"
+#include "achievementboard.h"
+#include "graph.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -29,8 +31,13 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void goBackToStackedPage(int index);
+
 private:
     Ui::MainWindow *ui;
+
+private slots:
+    void onStatsUpdated(const QString &todayHours, int streak);
 
 protected:
     void showEvent(QShowEvent* event) override;
@@ -38,12 +45,19 @@ protected:
     void showOverlay(QWidget* overlay);
     void loadUnfinishedPlans();
     void loadSelectedPlan(const QString &planName);
+    void generateQuote();
+    void loadTodayTasksToChart();
 
 private:
     englishoverlay *englishOverlay;
-    // programmingoverlay *programmingOverlay;
     QWidget* overlayWidget;
     taskRecord* TaskRecord;
+    taskRecord taskLogger;
+    achievementboard *achievementBoard;
+    graph *Graph;
+    taskRecord *m_taskRecord;
+    QLabel *m_hoursLabel;      // 指向UI中显示小时数的标签
+    QLabel *m_streakLabel;     // 指向UI中显示连续天数的标签
 
 };
 #endif // MAINWINDOW_H

@@ -161,7 +161,11 @@ void HistoryWindow::loadLog() {
             // Display the plan title as clickable
             QString titleDisplay = plan.second.first;
             QString planName = titleDisplay.split("    📘 ")[1].split("    ✏️")[0].trimmed(); // Extract plan name
+<<<<<<< Updated upstream
             ClickableLabel *titleLabel = new ClickableLabel(titleDisplay, this);
+=======
+             clickableLabel *titleLabel = new clickableLabel(titleDisplay, this);
+>>>>>>> Stashed changes
             titleLabel->setCursor(Qt::PointingHandCursor);
             titleLabel->setStyleSheet(R"(
                 QLabel {
@@ -174,7 +178,11 @@ void HistoryWindow::loadLog() {
                     text-decoration: underline;
                 }
             )");
+<<<<<<< Updated upstream
             connect(titleLabel, &ClickableLabel::clicked, this, [=]() {
+=======
+            connect(titleLabel, &clickableLabel::clicked, this, [=]() {
+>>>>>>> Stashed changes
                 QList<QPair<QString, bool>> taskPairs;
                 for (const QString &taskDisplay : plan.second.second) {
                     QString cleanTask = taskDisplay.trimmed();

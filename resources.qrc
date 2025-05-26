@@ -4,6 +4,30 @@
         <file>icons/icons8-history-100.png</file>
         <file>icons/icons8-reload-100.png</file>
         <file>icons/icons8-choose-96.png</file>
+<<<<<<< Updated upstream
     </qresource>
     <qresource prefix="/new/prefix1"/>
+=======
+        <file>icons/arrow_left.png</file>
+        <file>icons/schedule.png</file>
+        <file>icons/account_circle-3.png</file>
+        <file>icons/Home.png</file>
+        <file>icons/Pie chart.png</file>
+        <file>icons/main-pic.png</file>
+        <file>icons/Widget.png</file>
+        <file>icons/circle-2.png</file>
+        <file>icons/quoteSymbol.png</file>
+        <file>icons/TrophyCup.png</file>
+        <file>icons/book.png</file>
+        <file>icons/check.png</file>
+        <file>icons/edit.png</file>
+    </qresource>
+    <qresource prefix="/new/prefix1"/>
+    <qresource prefix="/">
+        <file>quote.txt</file>
+        <file>icons/star.gif</file>
+        <file>icons/star2.gif</file>
+        <file>icons/fire.gif</file>
+    </qresource>
+>>>>>>> Stashed changes
 </RCC>

@@ -85,14 +85,12 @@ englishoverlay::englishoverlay(QWidget *parent)
                 updatedLines << line;
             }
 
-            // 添加新版本的计划
-            if (!allChecked) {
-                updatedLines << "[[" + planName + "]]";
-                updatedLines << taskLines;
-                updatedLines << ""; // 空行分隔计划
-            } else {
-                qDebug() << "All finished";
-            }
+            // 添加新版本的计划，无论是否完成都记录，并加状态标记
+            updatedLines << "[[" + planName + "]]";
+            updatedLines << (allChecked ? "[FINISHED]" : "[UNFINISHED]");
+            updatedLines << taskLines;
+            updatedLines << ""; // 空行分隔计划
+
 
             // 写回文件
             if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {

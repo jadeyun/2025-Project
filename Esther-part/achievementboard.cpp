@@ -9,6 +9,7 @@
 #include <QStandardItem>
 #include <QStringList>
 #include <QStandardPaths>
+#include <QRegularExpression>
 
 
 achievementboard::achievementboard(QWidget *parent)
@@ -48,31 +49,86 @@ void achievementboard::loadTasks() {
     QTextStream in(&file);
 
     in.readLine();
+    in.readLine();
+
 
     while (!in.atEnd()) {
-        QString line = in.readLine().trimmed();
-        if (line.isEmpty())
-            continue;
+        // QString line = in.readLine().trimmed();
+        // if (line.isEmpty())
+        //     continue;
 
-        // need to change
-        QStringList parts = line.split('|');
-        if (parts.size() < 10)
-            continue;
+        // // need to change
+        // QStringList parts = line.split('|');
+        // if (parts.size() < 10)
+        //     continue;
 
-        QString task = parts[0].trimmed();
-        QString freq = parts[9].trimmed();
+        // QString task = parts[0].trimmed();
+        // QString freq = parts[9].trimmed();
 
-        QString paddedTask = task.leftJustified(50, ' ');  // Adjust width as needed
-        QString displayText = QString("%1%2").arg(paddedTask, QString("打卡次数: %1").arg(freq));
-        QStandardItem* item = new QStandardItem(displayText);
+        // QString paddedTask = task.leftJustified(50, ' ');  // Adjust width as needed
+        // QString displayText = QString("%1%2").arg(paddedTask, QString("打卡次数: %1").arg(freq));
+        // QStandardItem* item = new QStandardItem(displayText);
 
-        // Style
-        item->setBackground(QBrush(QColor("#F0F0F0"))); // Light background
-        item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-        item->setSizeHint(QSize(200, 40)); // Height for padding
-        item->setFont(QFont("Arial", 12));
+        // // Style
+        // item->setBackground(QBrush(QColor("#F0F0F0"))); // Light background
+        // item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        // item->setSizeHint(QSize(200, 40)); // Height for padding
+        // item->setFont(QFont("Arial", 12));
 
-        model->appendRow(item);
+        // model->appendRow(item);
+
+
+        QMap<QString, int> taskRowMap;  // Task name -> row index
+
+        while (!in.atEnd()) {
+            QString line = in.readLine().trimmed();
+            if (line.isEmpty())
+                continue;
+
+            QStringList parts = line.split('|');
+            if (parts.size() < 10)
+                continue;
+
+            QString task = parts[0].trimmed();
+            QString freqStr = parts[9].trimmed();
+            int freq = freqStr.toInt();  // Convert to int for summing
+
+            if (taskRowMap.contains(task)) {
+                // Already exists → update frequency
+                int row = taskRowMap[task];
+                QStandardItem* item = model->item(row);
+
+                // Extract current frequency from text
+                QString text = item->text();
+                int oldFreq = 0;
+                QRegularExpression re("打卡次数: (\\d+)");
+                QRegularExpressionMatch match = re.match(text);
+                if (match.hasMatch()) {
+                    oldFreq = match.captured(1).toInt();
+                }
+
+                int newFreq = oldFreq + freq;
+                QString paddedTask = task.leftJustified(50, ' ');
+                item->setText(QString("%1打卡次数: %2").arg(paddedTask).arg(newFreq));
+
+            } else {
+                // New task → add to model
+                QString paddedTask = task.leftJustified(50, ' ');
+                QString displayText = QString("%1打卡次数: %2").arg(paddedTask).arg(freq);
+                QStandardItem* item = new QStandardItem(displayText);
+
+                item->setBackground(QBrush(QColor("#F0F0F0")));
+                item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+                item->setSizeHint(QSize(200, 40));
+                item->setFont(QFont("Arial", 12));
+
+                int row = model->rowCount();
+                model->appendRow(item);
+                taskRowMap[task] = row;
+            }
+        }
+
+
     }
 
     file.close();

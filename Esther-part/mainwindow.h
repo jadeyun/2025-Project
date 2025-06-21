@@ -38,6 +38,9 @@ public:
 private:
     Ui::MainWindow *ui;
 
+private slots:
+    void onStatsUpdated(const QString &todayHours, int streak);
+
 protected:
     void showEvent(QShowEvent* event) override;
     void resizeEvent(QResizeEvent* event) override;
@@ -51,8 +54,13 @@ private:
     englishoverlay *englishOverlay;
     QWidget* overlayWidget;
     taskRecord* TaskRecord;
+    taskRecord taskLogger;
     achievementboard *achievementBoard;
     graph *Graph;
+
+    taskRecord *m_taskRecord;
+    QLabel *m_hoursLabel;      // 指向UI中显示小时数的标签
+    QLabel *m_streakLabel;     // 指向UI中显示连续天数的标签
 
 };
 #endif // MAINWINDOW_H

@@ -24,5 +24,6 @@
         <file>icons/star.gif</file>
         <file>icons/star2.gif</file>
         <file>icons/fire.gif</file>
+        <file>build/Unnamed-Debug/alarms/defaultalarm.mp3</file>
     </qresource>
 </RCC>

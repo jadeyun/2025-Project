@@ -4,6 +4,10 @@
 #include "timetable.h"
 #include "profile.h"
 #include "welcomepage.h"
+#include "FormDialog.h"
+#include "TimerWidget.h"
+#include "historywindow.h"
+
 
 #include <QMessageBox>
 #include <QMenu>
@@ -179,7 +183,33 @@ MainWindow::MainWindow(QWidget *parent)
         englishOverlay->setName("学习英语");
         englishOverlay->setTasks(tasks);
         englishOverlay->setGeometry(ui->centralwidget->rect());
+
+        // 居中 TimerWidget
+        int widgetWidth = 300;
+        int widgetHeight = 200;
+        int x = (englishOverlay->width() - widgetWidth) / 2;
+        int y = (englishOverlay->height() - widgetHeight) / 2 - 100;
+
+        TimerWidget* timer = new TimerWidget(englishOverlay);
+        timer->setGeometry(x, y, widgetWidth, widgetHeight);
+
+        // 设置背景样式（你也可以在 TimerWidget 构造函数中写）
+        timer->setStyleSheet(R"(
+        background-color: #2E2E2E;
+        color: white;
+        border-radius: 10px;
+    )");
+        connect(timer, &TimerWidget::timerFinished, TaskRecord, [=](int duration) {
+            TaskRecord->logTimeSpent("学习英语", duration);
+        });
+
+
+        connect(timer, &TimerWidget::timerPaused, TaskRecord, [=](int duration) {
+            TaskRecord->logTimeSpent("学习英语", duration);
+        });
+
         englishOverlay->show();
+        timer->show();
         showOverlay(englishOverlay);
     });
 
@@ -192,7 +222,31 @@ MainWindow::MainWindow(QWidget *parent)
         englishOverlay->setName("学习编程");
         englishOverlay->setTasks(tasks);
         englishOverlay->setGeometry(ui->centralwidget->rect());
+
+        // 居中 TimerWidget
+            int widgetWidth = 300;
+        int widgetHeight = 200;
+        int x = (englishOverlay->width() - widgetWidth) / 2;
+        int y = (englishOverlay->height() - widgetHeight) / 2 - 100;
+
+        TimerWidget* timer = new TimerWidget(englishOverlay);
+        timer->setGeometry(x, y, widgetWidth, widgetHeight);
+
+        // 设置背景样式（你也可以在 TimerWidget 构造函数中写）
+        timer->setStyleSheet(R"(
+        background-color: #2E2E2E;
+        color: white;
+        border-radius: 10px;
+    )");
+        connect(timer, &TimerWidget::timerFinished, TaskRecord, [=](int duration) {
+            TaskRecord->logTimeSpent("学习编程", duration);
+        });
+        connect(timer, &TimerWidget::timerPaused, TaskRecord, [=](int duration) {
+            TaskRecord->logTimeSpent("学习编程", duration);
+        });
         englishOverlay->show();
+        timer->show();
+
         showOverlay(englishOverlay);
 
     });
@@ -206,40 +260,126 @@ MainWindow::MainWindow(QWidget *parent)
         englishOverlay->setName("学习剪辑");
         englishOverlay->setTasks(tasks);
         englishOverlay->setGeometry(ui->centralwidget->rect());
+
+        // 居中 TimerWidget
+        int widgetWidth = 300;
+        int widgetHeight = 200;
+        int x = (englishOverlay->width() - widgetWidth) / 2;
+        int y = (englishOverlay->height() - widgetHeight) / 2 - 100;
+
+        TimerWidget* timer = new TimerWidget(englishOverlay);
+        timer->setGeometry(x, y, widgetWidth, widgetHeight);
+
+        // 设置背景样式（你也可以在 TimerWidget 构造函数中写）
+        timer->setStyleSheet(R"(
+        background-color: #2E2E2E;
+        color: white;
+        border-radius: 10px;
+    )");
+        connect(timer, &TimerWidget::timerFinished, TaskRecord, [=](int duration) {
+            TaskRecord->logTimeSpent("学习剪辑", duration);
+        });
+        connect(timer, &TimerWidget::timerPaused, TaskRecord, [=](int duration) {
+            TaskRecord->logTimeSpent("学习剪辑", duration);
+        });
         englishOverlay->show();
+        timer->show();
+
         showOverlay(englishOverlay);
 
     });
 
 
     //制定计划 (KIV)
-    connect(ui->toolButton_3, &QPushButton::clicked, this, [this]() {
-        bool ok;
-        QString text = QInputDialog::getText(this, "Add Task", "Enter a task:", QLineEdit::Normal, "", &ok);
+    connect(ui->toolButton_3, &QPushButton::clicked, this, [=]() {
+            FormDialog *dialog = new FormDialog(this);
 
-        // TaskRecord->logTask("name");   // name=计划名字，这里可以让他记录在txt
+            connect(dialog, &FormDialog::planConfirmed, this, [=](const QString &planName, const QStringList &tasks) {
+                taskLogger.logTask(planName);  // 记录任务标题
+                taskLogger.logPlanWithTasks(planName,tasks);
 
-        if (ok && !text.isEmpty()) {
-            QStringList tasks;
-            tasks << text;
-            englishOverlay->setName("name"); // 页面右上角会显示用户自己填的计划名字
-            englishOverlay->setTasks(tasks); // 页面上显示任务
+                // 设置 overlay 内容为表单输入的内容
+                englishOverlay->setName(planName);
+                englishOverlay->setTasks(tasks);
+                englishOverlay->setGeometry(ui->centralwidget->rect());
+
+                // 居中 TimerWidget
+                int widgetWidth = 300;
+                int widgetHeight = 200;
+                int x = (englishOverlay->width() - widgetWidth) / 2;
+                int y = (englishOverlay->height() - widgetHeight) / 2 - 100;
+
+                TimerWidget* timer = new TimerWidget(englishOverlay);
+                timer->setGeometry(x, y, widgetWidth, widgetHeight);
+
+            // 设置背景样式（你也可以在 TimerWidget 构造函数中写）
+            timer->setStyleSheet(R"(
+        background-color: #2E2E2E;
+        color: white;
+        border-radius: 10px;
+    )");
+            // Connect timer signals to log time spent
+            connect(timer, &TimerWidget::timerFinished, &taskLogger, [=](int duration) {
+                taskLogger.logTimeSpent(planName, duration);
+            });
+            connect(timer, &TimerWidget::timerPaused, &taskLogger, [=](int duration) {
+                taskLogger.logTimeSpent(planName, duration);
+            });
             englishOverlay->show();
-        }
+            timer->show();
+            showOverlay(englishOverlay);
+        });
+
+        dialog->exec();
     });
 
 
-    // 未完成
-    // 记录在unfinished_plan //code 在 englishoverlay.cpp 的back button部分
-    // connect(ui->toolButton_2, &QPushButton::clicked, this, &MainWindow::loadUnfinishedPlans);
-
-
     // 历史记录
+    connect(ui->toolButton_4, &QPushButton::clicked, this, [this]() {
+        HistoryWindow *window = new HistoryWindow(nullptr);
+        window->setOverlay(englishOverlay);
+        window->setAttribute(Qt::WA_DeleteOnClose);
+
+        // Connect the planSelected signal to the same overlay setup logic
+        connect(window, &HistoryWindow::planSelected, this, [=](const QString &planName, const QList<QPair<QString, bool>> &tasks) {
+            englishOverlay->setName(planName);
+            englishOverlay->setTasksWithState(tasks);
+            englishOverlay->setGeometry(ui->centralwidget->rect());
+
+            // 居中 TimerWidget
+            int widgetWidth = 300;
+            int widgetHeight = 200;
+            int x = (englishOverlay->width() - widgetWidth) / 2;
+            int y = (englishOverlay->height() - widgetHeight) / 2 - 100;
+
+            TimerWidget* timer = new TimerWidget(englishOverlay);
+            timer->setGeometry(x, y, widgetWidth, widgetHeight);
+            timer->setStyleSheet(R"(
+                background-color: #2E2E2E;
+                color: white;
+                border-radius: 10px;
+            )");
+
+            // Connect timer signals to log time spent
+            connect(timer, &TimerWidget::timerFinished, &taskLogger, [=](int duration) {
+                taskLogger.logTimeSpent(planName, duration);
+            });
+            connect(timer, &TimerWidget::timerPaused, &taskLogger, [=](int duration) {
+                taskLogger.logTimeSpent(planName, duration);
+            });
+            englishOverlay->show();
+            timer->show();
+            showOverlay(englishOverlay);
+        });
+
+        window->show();
+        englishOverlay->hide();
+    });
 
 
     // 数据统计
     // successLabel - turning page
-    connect(ui->successLabel, &clickableLabel::clicked, this, [=]() {
+    connect(ui->successLabel, &ClickableLabel::clicked, this, [=]() {
         achievementBoard = new achievementboard(this);  // Set MainWindow as parent
 
         connect(achievementBoard, &achievementboard::backToMain, this, [this]() {
@@ -252,7 +392,7 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     // graphLabel - turning page
-    connect(ui->graphLabel, &clickableLabel::clicked, this, [=]() {
+    connect(ui->graphLabel, &ClickableLabel::clicked, this, [=]() {
         Graph = new graph(this);  // Set MainWindow as parent
 
         connect(Graph, &graph::backToMain, this, [this]() {
@@ -265,8 +405,17 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     // update hoursLabel
-
     // update totalDaysLabel
+    m_hoursLabel = ui->hoursLabel;
+    m_streakLabel = ui->totalDaysLabel;
+
+    // 连接信号槽
+    m_taskRecord = new taskRecord(this);
+    connect(m_taskRecord, &taskRecord::statsUpdated,
+            this, &MainWindow::onStatsUpdated);
+
+    // 初始化时刷新统计数据
+    m_taskRecord->refreshStats();
 
 
 }
@@ -415,7 +564,7 @@ void MainWindow::loadTodayTasksToChart() {
     // total
     QMap<QString, int> taskMap;  // Key: task name, Value: total duration
 
-    QFile file(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/saved_data.txt");
+    QFile file(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/task_log.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qWarning("Failed to open saved_data.txt");
         return;
@@ -423,9 +572,9 @@ void MainWindow::loadTodayTasksToChart() {
 
     QTextStream in(&file);
 
-    // QDate::currentDate().toString("yyyy-MM-dd");
-    QString today = "2025-05-20";  // Hardcoded for testing (replace with QDate::currentDate() later)
-    qDebug() << "Loading tasks for date:" << today;
+    // QString today = QDate::currentDate().toString("yyyy-MM-dd");
+    QString today = "2025-05-27";  // Hardcoded for testing (replace with QDate::currentDate() later)
+    // qDebug() << "Loading tasks for date:" << today;
 
     // Read and accumulate task durations
     while (!in.atEnd()) {
@@ -433,17 +582,19 @@ void MainWindow::loadTodayTasksToChart() {
         QStringList parts = line.split("|");
 
         // Skip malformed lines (expected format: task|date|duration)
-        if (parts.size() != 3) {
+        if (parts.size() != 11) {
             qDebug() << "Skipping malformed line:" << line;
             continue;
         }
 
         QString task = parts[0].trimmed();
         QString date = parts[1].trimmed();
-        bool match;
-        int duration = parts[2].trimmed().toInt(&match);
+        if (date != today) continue;  // ✅ Only process today's tasks
 
-        if (date == today && match) {
+        bool match;
+        int duration = parts[10].trimmed().toInt(&match);
+
+        if (match) {
             taskMap[task] += duration;  // Sum durations for duplicate tasks
             qDebug() << "Processed task:" << task << "Duration:" << duration << "Total:" << taskMap[task];
         }
@@ -539,11 +690,16 @@ void MainWindow::loadTodayTasksToChart() {
 }
 
 
-
-
-
-
-
+void MainWindow::onStatsUpdated(const QString &todayHours, int streak)
+{
+    qDebug() << "Stats updated - Hours:" << todayHours << "Streak:" << streak;
+    if (m_hoursLabel) {
+        m_hoursLabel->setText(QString("本日总时长： %2 小时").arg(todayHours));
+    }
+    if (m_streakLabel) {
+        m_streakLabel->setText(QString("总打卡天数: %1 天").arg(streak));
+    }
+}
 
 
 

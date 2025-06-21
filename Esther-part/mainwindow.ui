@@ -483,7 +483,7 @@
        <rect>
         <x>460</x>
         <y>100</y>
-        <width>61</width>
+        <width>81</width>
         <height>41</height>
        </rect>
       </property>
@@ -492,6 +492,13 @@
         <width>2</width>
         <height>2</height>
        </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
       </property>
       <property name="styleSheet">
        <string notr="true">background-color: transparent;
@@ -503,13 +510,19 @@ color: #0B1A36;</string>
       <property name="scaledContents">
        <bool>true</bool>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
      </widget>
      <widget class="QLabel" name="totalDaysLabel">
       <property name="geometry">
        <rect>
         <x>630</x>
         <y>100</y>
-        <width>61</width>
+        <width>81</width>
         <height>41</height>
        </rect>
       </property>
@@ -519,6 +532,13 @@ color: #0B1A36;</string>
         <height>2</height>
        </size>
       </property>
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <italic>true</italic>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="styleSheet">
        <string notr="true">background-color: transparent;
 color: #0B1A36;</string>
@@ -527,6 +547,12 @@ color: #0B1A36;</string>
        <string>total days</string>
       </property>
       <property name="scaledContents">
+       <bool>true</bool>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+      <property name="wordWrap">
        <bool>true</bool>
       </property>
      </widget>

@@ -12,9 +12,20 @@ class taskRecord : public QObject
 public:
     explicit taskRecord(QObject *parent = nullptr);
     void logTask(const QString &planName);
+    void logPlanWithTasks(const QString &planName, const QStringList &tasks);
+    void logTimeSpent(const QString &planName, int duration);
+    void updateSummaryStats();
+    void refreshStats();
+    QPair<QString, int> getCurrentStats(); // 返回 <今日时长字符串, 连续天数>
 
-// private:
+signals:
+    void statsUpdated(const QString &todayHours, int streak);
+
+
+private:
     QString logFilePath = "task_record.txt"; // 日志文件路径
+    QString m_todayHoursText;
+    int m_currentStreak;
 
 };
 

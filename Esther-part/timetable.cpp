@@ -44,6 +44,9 @@ Timetable::Timetable(MainWindow *parentWindow, QWidget *parent)
     if (QFile::exists("saved_timetable.csv")) {
         savedFile = "saved_timetable.csv";
         loadCSVFile(savedFile);
+        qDebug() << "Current working directory:" << QDir::currentPath();
+        qDebug() << "Looking for file at:" << QDir::currentPath() + "/saved_timetable.csv";
+
     }
 
 

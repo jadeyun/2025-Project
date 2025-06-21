@@ -63,7 +63,7 @@ graph::graph(QWidget *parent)
     //     loadData(savedDataFile);
     // }
 
-    QString path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/saved_data.txt";
+    QString path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/task_log.txt";
     qDebug() << "Looking for file at:" << path;  // Verify this path is correct
 
     if (QFile::exists(path)) {
@@ -169,15 +169,18 @@ void graph::loadData(const QString& filename)
     }
     QTextStream stream(&file);
     graphData.clear();
+
+    stream.readLine();  // Skip header line
+
     while (!stream.atEnd()) {
         QString line = stream.readLine();
         qDebug() << "Raw line:" << line;  // Debug output
         QStringList values = line.split('|');
-        if (values.size() != 3) {
+        if (values.size() != 11) {
             qDebug() << "Invalid line format:" << line;
             continue;
         }
-        GraphData temp(values[0], QDate::fromString(values[1], "yyyy-MM-dd"), values[2].toDouble());
+        GraphData temp(values[0], QDate::fromString(values[1], "yyyy-MM-dd"), values[10].toDouble());
         graphData.push_back(temp);
     }
     file.close();
@@ -197,8 +200,9 @@ void graph::filterData() {
         return;
     }
 
-    QDate today = QDate::currentDate();
-    qDebug() << "Filtering data for date:" << today.toString();
+    // QDate today = QDate::currentDate();
+    QDate today = QDate::fromString("2025-05-27", "yyyy-MM-dd");
+    // qDebug() << "Filtering data for date:" << today.toString();
 
     for (const auto& data : graphData) {
         if (data.date == today) { today_data[data.itemName] += data.timeSpent; }

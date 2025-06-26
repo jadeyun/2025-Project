@@ -2,7 +2,7 @@
 #include "ui_welcomepage.h"
 
 #include <QSlider>
-#include <QVBoxLayout>  // Include this
+#include <QVBoxLayout>
 #include <QPushButton>
 
 
@@ -27,7 +27,7 @@ WelcomePage::WelcomePage(QWidget *parent)
 }
 
 void WelcomePage::on_startButton_clicked() {
-    accept();  // Closes the dialog and returns QDialog::Accepted to main.cpp
+    accept();
 }
 
 

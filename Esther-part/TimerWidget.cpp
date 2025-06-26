@@ -24,10 +24,10 @@ TimerWidget::TimerWidget(QWidget *parent)
     audioOutput = new QAudioOutput(this);
     player->setAudioOutput(audioOutput);
     audioOutput->setVolume(0.5);
-    // QString path = QCoreApplication::applicationDirPath() + "/alarms/defaultalarm.mp3";
+    QString path = QCoreApplication::applicationDirPath() + "/alarms/defaultalarm.mp3";
     // QString path = QDir::homePath() + "/Documents/2025-Project/alarms/defaultalarm.mp3";
     // QString path = QDir::currentPath() + "/alarms/defaultalarm.mp3";
-    QString path = "/Users/esther/Documents/2025-Project/Esther-part/build/Unnamed-Debug/alarms/defaultalarm.mp3";
+    // QString path = "/Users/esther/Documents/2025-Project/Esther-part/build/Unnamed-Debug/alarms/defaultalarm.mp3";
 
 
 

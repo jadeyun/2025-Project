@@ -34,16 +34,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
 
-
-    // // 暂时清空
-    // QFile file(TaskRecord->logFilePath);
-    // if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-    //     QTextStream out(&file);
-    //     out << "name|date|year|month|day|time|hour|minute|second|times\n";
-    //     file.close();
-    //     qDebug() << "日志文件已在启动时清空";
-    // }
-
     generateQuote();
 
     // Button
@@ -92,9 +82,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->plan_img->setPixmap(QPixmap(":/icons/icons/icons8-write-96.png")); //制定计划
     ui->plan_img->setScaledContents(true);
 
-    // ui->notdone_img->setPixmap(QPixmap(":/icons/icons/icons8-reload-100.png")); //未完成
-    // ui->notdone_img->setScaledContents(true);
-
     ui->record_img->setPixmap(QPixmap(":/icons/icons/icons8-history-100.png")); //历史记录
     ui->record_img->setScaledContents(true);
 
@@ -117,18 +104,7 @@ MainWindow::MainWindow(QWidget *parent)
             background-color: #EDA270;
         }
 )");
-//     ui->toolButton_2->setStyleSheet(R"(
-//         QToolButton{
-//             background-color: #E28A52;
-//             color: beige;
-//             border-radius: 10px;
-//             font-size: 12px;
-//         }
 
-//         QToolButton:hover {
-//             background-color: #EDA270;
-//         }
-// )");
     ui->toolButton_3->setStyleSheet(R"(
         QToolButton{
             background-color: #E28A52;
@@ -172,7 +148,7 @@ MainWindow::MainWindow(QWidget *parent)
     QAction* action3 = menu->addAction("学习剪辑");
 
     ui->toolButton->setMenu(menu);
-    ui->toolButton->setPopupMode(QToolButton::InstantPopup); // or MenuButtonPopup
+    ui->toolButton->setPopupMode(QToolButton::InstantPopup);
 
     connect(action1, &QAction::triggered, this, [this]() { // 学习英语
         qDebug() << "Choice 1 selected";
@@ -193,7 +169,7 @@ MainWindow::MainWindow(QWidget *parent)
         TimerWidget* timer = new TimerWidget(englishOverlay);
         timer->setGeometry(x, y, widgetWidth, widgetHeight);
 
-        // 设置背景样式（你也可以在 TimerWidget 构造函数中写）
+        // 设置背景样式
         timer->setStyleSheet(R"(
         background-color: #2E2E2E;
         color: white;
@@ -232,7 +208,7 @@ MainWindow::MainWindow(QWidget *parent)
         TimerWidget* timer = new TimerWidget(englishOverlay);
         timer->setGeometry(x, y, widgetWidth, widgetHeight);
 
-        // 设置背景样式（你也可以在 TimerWidget 构造函数中写）
+        // 设置背景样式
         timer->setStyleSheet(R"(
         background-color: #2E2E2E;
         color: white;
@@ -270,7 +246,7 @@ MainWindow::MainWindow(QWidget *parent)
         TimerWidget* timer = new TimerWidget(englishOverlay);
         timer->setGeometry(x, y, widgetWidth, widgetHeight);
 
-        // 设置背景样式（你也可以在 TimerWidget 构造函数中写）
+        // 设置背景样式
         timer->setStyleSheet(R"(
         background-color: #2E2E2E;
         color: white;
@@ -290,7 +266,7 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
 
-    //制定计划 (KIV)
+    //制定计划
     connect(ui->toolButton_3, &QPushButton::clicked, this, [=]() {
             FormDialog *dialog = new FormDialog(this);
 
@@ -312,7 +288,7 @@ MainWindow::MainWindow(QWidget *parent)
                 TimerWidget* timer = new TimerWidget(englishOverlay);
                 timer->setGeometry(x, y, widgetWidth, widgetHeight);
 
-            // 设置背景样式（你也可以在 TimerWidget 构造函数中写）
+            // 设置背景样式
             timer->setStyleSheet(R"(
         background-color: #2E2E2E;
         color: white;
@@ -404,8 +380,6 @@ MainWindow::MainWindow(QWidget *parent)
         this->centralWidget()->hide();  // Hide main page
     });
 
-    // update hoursLabel
-    // update totalDaysLabel
     m_hoursLabel = ui->hoursLabel;
     m_streakLabel = ui->totalDaysLabel;
 
@@ -422,7 +396,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
-// // go back to stacked page
+// go back to stacked page
 void MainWindow::goBackToStackedPage(int index) {
     ui->stackedWidget->setCurrentIndex(index);
     this->show();
@@ -650,8 +624,6 @@ void MainWindow::loadTodayTasksToChart() {
     chart->setMargins(QMargins(30, 40, 130, 90));  // more margin to avoid clipping // (30, 40, 130, 60)
     chart->legend()->hide();
 
-    // chart->setFixedSize(500, 350);
-
     // Set up the chart view
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
@@ -684,9 +656,9 @@ void MainWindow::loadTodayTasksToChart() {
     qDebug() << "Chart updated with" << series->slices().size() << "tasks.";
 
 
-    chartView->setParent(ui->donut_chart);  // Ensure correct parent
+    chartView->setParent(ui->donut_chart);
     chartView->setGeometry(300, 50, 480, 320);  // x, y, width, height
-    chartView->show();  // Make sure it's visible
+    chartView->show();
 }
 
 

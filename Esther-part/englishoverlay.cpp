@@ -32,15 +32,6 @@ englishoverlay::englishoverlay(QWidget *parent)
 
             QString path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/unfinished_plans.txt";
 
-            // if要暂时清空文件
-            // QFile file(path);
-            // if (file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
-            //     file.close(); // 直接关闭即可，内容已被清空
-            //     QMessageBox::information(this, "Success", "All saved plans have been cleared.");
-            // } else {
-            //     QMessageBox::warning(this, "Error", "Failed to clear saved plans.");
-            // }
-
             // 收集任务及状态
             QList<QString> taskLines;
             bool allChecked = true;
@@ -80,7 +71,7 @@ englishoverlay::englishoverlay(QWidget *parent)
                         insidePlan = false;
                         updatedLines << line;  // 新计划开始，加进去
                     }
-                    continue;  // 跳过旧的该计划
+                    continue;
                 }
                 updatedLines << line;
             }

@@ -46,23 +46,6 @@ graph::graph(QWidget *parent)
 
     ui->bigLayout->setContentsMargins(30, 30, 30, 30);
 
-    // Test data
-    // graphData = {
-    //     GraphData("Sleep", QDate::currentDate(), 480),
-    //     GraphData("Work", QDate::currentDate(), 360),
-    //     GraphData("Eat", QDate::currentDate(), 120),
-    //     GraphData("Exercise", QDate::currentDate(), 60),
-    //     GraphData("Study", QDate::currentDate(), 180)
-    // };
-
-    // filterData();
-    // loadGraph(_today_data);
-
-    // if (QFile::exists("saved_data.txt")) {
-    //     savedDataFile = "saved_data.txt";
-    //     loadData(savedDataFile);
-    // }
-
     QString path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/task_log.txt";
     qDebug() << "Looking for file at:" << path;  // Verify this path is correct
 
